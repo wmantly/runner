@@ -8,7 +8,7 @@ class index(View):
 		return JsonResponse({"message": "no gets"})
 
 	def post(self, request):
-		code = base64.b64decode(request.POST.get('code').encode())
+		code = base64.b64decode(request.POST.get('code').encode()).decode()
 		code = 'export NODE_PATH=/var/www/runner/node_modules; {}'.format(code)
 		res = base64.b64encode(subprocess.getoutput(code).encode())
 
