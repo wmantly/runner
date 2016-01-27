@@ -1,16 +1,14 @@
 import base64, json
-from django.shortcuts import render, redirect
 from django.views.generic import View
-from django.http import HttpResponse, JsonResponse
-from runner.helper import SuperSecureInterpreter
+from django.http import JsonResponse
+import subprocess
 
 class index(View):
 	def get(self, request):
 		return JsonResponse({"message": "no gets"})
 
 	def post(self, request):
-		pandoras_box = SuperSecureInterpreter(request.POST.get('code'),language=request.POST.get('language'))
-		pandoras_box.open()
-		context = {'code': pandoras_box.code_string, 'res': pandoras_box.result}
+		code = base64.b64decode(request.POST.get('code').encode())
+		res = base64.b64encode(subprocess.getoutput(code).encode())
 
-		return JsonResponse({'res': pandoras_box.result})
+		return JsonResponse({'res': res.decode()})
