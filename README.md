@@ -4,7 +4,7 @@ make a runner from the host OS:
 ```bash
 lxc-create -t download -n ubuntu-runner -- -d ubuntu -r trusty -a amd64
 ```
-
+
 then start and attache to the container so we can install and set up.
 ```bash
 lxc-start -n ubuntu-runner -d
@@ -12,10 +12,10 @@ lxc-attach -n ubuntu-runner
 ```
 now that you are in the container, lets install the packages we need,
 ```bash
-apt-get install git apache2 python3-dev python3-pip libapache2-mod-wsgi-py3 nodejs npm -y
+apt-get install git apache2 python3-dev python3-pip libpq-dev libapache2-mod-wsgi-py3 nodejs npm -y
+ln -s /usr/bin/nodejs /usr/bin/node
 pip3 install virtualenv
 npm install forever -g
-ln -s /usr/bin/nodejs /usr/bin/node
 ```
 Add the runner user:
 ```bash
@@ -27,6 +27,13 @@ get the runner server:
 git clone https://github.com/wmantly/runner.git /var/www/runner
 chown -R runner:runner /var/www/runner
 ```
+
+set up the runner's python virtual env:
+```bash
+su runner
+virtualenv /var/www/runner/env
+source /var/www/runner/env/bin/activate
+pip3 install -r /var/www/runner/requirements.txt
 
 Set us the Apache vhost config file:
 ```bash
