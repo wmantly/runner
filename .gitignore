@@ -62,3 +62,5 @@ env/
 secret.py
 secrets.py
 *.sqlite3
+
+node_modules
